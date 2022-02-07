@@ -57,7 +57,7 @@ def arithmetic_arranger(problems, show_results=False):
         # operator in the same line as second operand
         # four spaces between each problem
         operand2_line += operator + operand2 + ' ' * 4
-        
+
         # put dashes at the bottom of each problem
         dashes_line += dashes + ' ' * 4
         results_line += ' ' * (len(dashes) - len(results)) + results + ' ' * 4
