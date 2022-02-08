@@ -1,6 +1,8 @@
 def add_time(start_time, duration, starting_day=''):
+    periods = ('PM', 'AM')
     end_minutes = 0
     end_hours = 0
+    new_time = ''
 
     # split start_time
     time, period = start_time.split(' ')
@@ -16,7 +18,19 @@ def add_time(start_time, duration, starting_day=''):
         end_hours += 1
 
     # add hours
-    #end_hours += start_hours + duration_hours
-    return f"{str(end_hours)}:{str(end_minutes)}"
+    end_hours += int(start_hours) + int(duration_hours)
+    if int(end_hours/12) > 2:
+        end_hours = end_hours - (12 * int(end_hours/12))
+    elif int(end_hours/12) > 0 and end_hours >= 13:
+        new_period = periods[periods.index(period) - 1]
+        end_hours = end_hours - 12
+        new_time = f"{str(end_hours)}:{str(end_minutes)} AM"
+        if period == 'PM':
+            new_time += ' (next day)'
 
-print(add_time("3:55 PM", "3:15"))
+    return new_time
+
+print(add_time("3:00 PM", "3:10"))
+print(add_time("11:30 AM", "2:32"))
+print(add_time("11:43 AM", "00:20"))
+print(add_time("10:10 PM", "3:30"))
