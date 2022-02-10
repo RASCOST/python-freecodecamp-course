@@ -19,10 +19,16 @@ def add_time(start_time, duration, starting_day=''):
 
     # add hours
     end_hours += int(start_hours) + int(duration_hours)
-    if int(end_hours/12) > 2:
-        end_hours = end_hours - (12 * int(end_hours/12))
-    elif int(end_hours/12) > 0 and end_hours >= 13:
+
+    if end_hours < 12: # in the same period
+        return f"{str(end_hours)}:{str(end_minutes)} {period}"
+
+    # more than 1 day
+    if int(end_hours / 12) > 2:
+        end_hours = end_hours - (12 * int(end_hours / 12))
         new_period = periods[periods.index(period) - 1]
+        new_time = f"{str(end_hours)}:{str(end_minutes)} {new_period}"
+    elif int(end_hours / 12) > 0 and end_hours >= 13:
         end_hours = end_hours - 12
         new_time = f"{str(end_hours)}:{str(end_minutes)} AM"
         if period == 'PM':
