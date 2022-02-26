@@ -18,7 +18,7 @@ def same_period():
         return f"{str(end_hours)}:{str(end_minutes)} {period}"
 
 def add_time(start_time, duration, starting_day=''):
-    periods = ('PM', 'AM')
+    days = ('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday')
     end_minutes = 0
     end_hours = 0
     new_period = ''
@@ -34,46 +34,52 @@ def add_time(start_time, duration, starting_day=''):
     # add minutes
     end_minutes, end_hours = add_minutes(start_minutes, duration_minutes)
 
-    # add hours
-    end_hours += int(start_hours) + int(duration_hours)
 
-    if end_hours < 12: # in the same period
-        return f"{str(end_hours)}:{end_minutes} {period}{', ' + starting_day if starting_day else ''}"
+    if int(start_hours) + int(duration_hours) + end_hours < 12:
+        # add hours
+        end_hours += int(start_hours) + int(duration_hours)
+        return f"{end_hours}:{end_minutes} {period}{', ' + starting_day if starting_day else ''}"
 
-    if end_hours == 12:
-        if 'PM' == period:
+    if int(start_hours) + int(duration_hours) + end_hours == 12:
+        end_hours += int(start_hours) + int(duration_hours)
+        if period == 'PM':
             new_period = 'AM'
+            return f"{end_hours}:{end_minutes} {new_period} (next day)"
         else:
             new_period = 'PM'
 
-        if starting_day:
-            return f"{str(end_hours)}:{str(end_minutes)} {new_period} {starting_day}"
-        else:
-            return f"{str(end_hours)}:{str(end_minutes)} {new_period}"
+        return f"{end_hours}:{end_minutes} {new_period}{', ' + starting_day if starting_day else ''}"
 
-    if end_hours > 12 and end_hours <= 24:
+    n_days = int(int(duration_hours) / 24)
+    rest_hours = int(duration_hours) % 24
+
+    if n_days == 0:
+        end_hours += int(start_hours) + int(duration_hours)
         end_hours -= 12
+        if 'AM' == period:
+            return f"{end_hours}:{end_minutes} {new_period}{', ' + starting_day if starting_day else ''}"
+
+        return f"{end_hours}:{end_minutes} PM (next day)"
+
+    if rest_hours + int(start_hours) + end_hours >= 12:
+        if rest_hours + int(start_hours) + end_hours == 12:
+            end_hours += int(start_hours) + rest_hours
+        else:
+            end_hours += int(start_hours) + rest_hours - 12
         if 'PM' == period:
+            n_days += 1
             new_period = 'AM'
         else:
             new_period = 'PM'
-            return f"{str(end_hours)}:{str(end_minutes)} {new_period} {',' + starting_day if starting_day else ''}"
+    else:
+        end_hours += int(start_hours) + rest_hours
 
-        if starting_day:
-            return f"{str(end_hours)}:{str(end_minutes)} {new_period}, {starting_day}"
+    if starting_day:
+        ending_day = days[days.index(starting_day.capitalize()) + n_days % 7]
 
-        return f"{str(end_hours)}:{str(end_minutes)} {new_period} (next day)"
+    return f"{end_hours}:{end_minutes} {new_period}{', ' + ending_day if starting_day else ''} ({n_days} days later)"
 
-    n_days = int(end_hours / 12)
-    end_hours -= n_days * 12
-
-    if n_days % 12 == 0:
-        if 'PM' == period:
-            new_period = 'AM'
-            #return f"{str(end_hours)}:{str(end_minutes)} {new_period} ({'next day' if int(n_days/2) == 1 else 'days later'})"
-        else:
-            new_period = 'PM'
-
-    return f"{str(end_hours)}:{str(end_minutes)} {new_period} ({'next day' if int(n_days/2) == 1 else str(int(n_days/2)+1) + ' days later'})"
 
 print(add_time("8:16 PM", "466:02"))
+print(add_time("11:43 PM", "24:20", "tueSday"))
+print(add_time("6:30 PM", "205:12"))
