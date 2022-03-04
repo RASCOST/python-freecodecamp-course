@@ -56,10 +56,11 @@ def add_time(start_time, duration, starting_day=''):
     if n_days == 0:
         end_hours += int(start_hours) + int(duration_hours)
         end_hours -= 12
-        if 'AM' == period:
-            return f"{end_hours}:{end_minutes} {new_period}{', ' + starting_day if starting_day else ''}"
 
-        return f"{end_hours}:{end_minutes} PM (next day)"
+        if 'PM' == period:
+            return f"{end_hours}:{end_minutes} AM{', ' + starting_day if starting_day else ' (next day)'}"
+
+        return f"{end_hours}:{end_minutes} PM"
 
     if rest_hours + int(start_hours) + end_hours >= 12:
         if rest_hours + int(start_hours) + end_hours == 12:
@@ -71,15 +72,42 @@ def add_time(start_time, duration, starting_day=''):
             new_period = 'AM'
         else:
             new_period = 'PM'
+
+        if starting_day:
+            if n_days > 7:
+                if int(n_days % 7) + days.index(starting_day.capitalize()) > 6:
+                    day_idx = (int(n_days / 7) % 7) - 1
+                else:
+                    day_idx = int(n_days / 7) + days.index(starting_day.capitalize())
+            else:
+                if n_days + days.index(starting_day.capitalize()) > 6:
+                    day_idx = (n_days % 7) - 1
+                else:
+                    day_idx = n_days + days.index(starting_day.capitalize())
+
+            ending_day = days[day_idx]
+
     else:
+        if starting_day:
+            if n_days > 7:
+                if int(n_days % 7) + days.index(starting_day.capitalize()) > 6:
+                    day_idx = (int(n_days / 7) % 7) - 1
+                else:
+                    day_idx = int(n_days / 7) + days.index(starting_day.capitalize())
+            else:
+                if n_days + days.index(starting_day.capitalize()) > 6:
+                    day_idx = (n_days % 7) - 1
+                else:
+                    day_idx = n_days + days.index(starting_day.capitalize())
+
+            ending_day = days[day_idx]
+
         end_hours += int(start_hours) + rest_hours
 
-    if starting_day:
-        ending_day = days[days.index(starting_day.capitalize()) + n_days % 7]
+        return f"{end_hours}:{end_minutes} {period}{', ' + ending_day if starting_day else ''} (next day)"
 
     return f"{end_hours}:{end_minutes} {new_period}{', ' + ending_day if starting_day else ''} ({n_days} days later)"
 
 
-print(add_time("8:16 PM", "466:02"))
-print(add_time("11:43 PM", "24:20", "tueSday"))
-print(add_time("6:30 PM", "205:12"))
+# print(add_time("8:16 PM", "466:02", "tuesday"))
+print(add_time("2:59 AM", "24:00", "saturDay"))
