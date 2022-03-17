@@ -16,6 +16,6 @@ class Category:
         total = 0
 
         for index=0 in len(self.ledger):
-            total += self.ledger[index]
+            total += self.ledger[index]['amount']
 
         return total
