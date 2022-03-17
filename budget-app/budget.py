@@ -3,3 +3,7 @@ class Category:
         self.ledger = ledger
 
 
+    def deposit(self, amount, comment=''):
+        ledger.append({'amount': amount, 'comment': comment})
+
+    
