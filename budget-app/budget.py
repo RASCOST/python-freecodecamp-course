@@ -5,11 +5,11 @@ class Category:
 
 
     def deposit(self, amount, comment=''):
-        ledger.append({'amount': amount, 'comment': comment})
+        self.ledger.append({'amount': amount, 'comment': comment})
 
     def withdraw(self,  amount, comment=''):
-        if get_balance() > amount:
-            deposit(-amount, comment)
+        if self.check_funds(amount):
+            self.deposit(-amount, comment)
             return true
         return false
 
@@ -22,10 +22,15 @@ class Category:
         return total
 
     def transfer(self, amount, category):
-        if get_balance() > amount:
-            withdraw(amout, f"Transfert to {category.name}")
-            deposit(amout, f"Transfert from {self.name}")
+        if self.check_funds(amount):
+            self.withdraw(amout, f"Transfer to {category.name}")
+            self.deposit(amout, f"Transfer from {self.name}")
             return true
 
         return false
 
+    def check_funds(self, amount):
+        if amount > self.get_balance():
+            return false
+
+        return true
