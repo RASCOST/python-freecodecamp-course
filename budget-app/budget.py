@@ -34,3 +34,15 @@ class Category:
             return false
 
         return true
+
+    def __str__(self):
+        cat_length = len(self.name)
+
+        if 30 - cat_length % 2 == 0:
+            title = '*' * (30 - cat_length) / 2
+            title += self.name
+            title += '*' * (30 - cat_length) / 2
+        else:
+            title = '*' * (30 - cat_length) / 2
+            title += self.name
+            title += '*' * (30 - ((30 - cat_length) / 2) - cat_length)
