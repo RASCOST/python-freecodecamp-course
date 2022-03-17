@@ -11,3 +11,11 @@ class Category:
             deposit(-amount, comment)
             return true
         return false
+
+    def get_balance(self):
+        total = 0
+
+        for index=0 in len(self.ledger):
+            total += self.ledger[index]
+
+        return total
