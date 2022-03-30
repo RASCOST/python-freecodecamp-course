@@ -8,3 +8,6 @@ class Rectangle:
 
     def setHeight(self, height):
         self.height = height
+
+    def getArea(self):
+        return self.width * self.height
