@@ -81,19 +81,26 @@ class Category:
 def create_spend_chart(categories):
     chart = 'Percentage spent by category' + '\n'
     percentages = []
+    total = 0
 
-    # get the percentages
+   # get withdrawals total
     for category in categories:
-        total = 0
-        if not category.ledger:
-            percentages.append(0)
-            break
-
         for idx in range(len(category.ledger)):
             if category.ledger[idx]['amount'] < 0:
                 total += abs(category.ledger[idx]['amount'])
 
-        percentages.append(round(100 * total / category.ledger[0]['amount']))
+    # get the percentages
+    for category in categories:
+        withdraws = 0
+
+        for idx in range(len(category.ledger)):
+            if category.ledger[idx]['amount'] < 0:
+                withdraws += abs(category.ledger[idx]['amount'])
+
+        if total == 0:
+          percentages.append(0)
+        else:
+          percentages.append(round(100 * withdraws / total))
 
     # create the bargraph
     for y in range(100, -10, -10):
@@ -101,7 +108,10 @@ def create_spend_chart(categories):
         for percentage in percentages:
             if percentage >= y:
                 chart += ' o '
-        chart += '\n'
+            else:
+              chart += '   '
+        chart += ' \n'
+
 
     # x line
     chart += ' ' * 4 + '---' * len(categories) + '-\n'
@@ -118,28 +128,39 @@ def create_spend_chart(categories):
                 line += ' ' * 3
 
         if not re.search('[a-zA-Z]', line):
+            chart = chart[:len(chart) - 5]
             break
         else:
-            chart += line + '\n'
+            chart += line + ' \n'
             idx += 1
-
+    print(len(chart))
     return chart
 
 
 food = Category("Food")
-food.deposit(1000, "initial deposit")
-food.withdraw(10.15, "groceries")
-food.withdraw(15.89, "restaurant and more food for dessert")
+entertainment = Category("Entertainment")
+business = Category("Businness")
+# food.deposit(1000, "initial deposit")
+# food.withdraw(10.15, "groceries")
+# food.withdraw(15.89, "restaurant and more food for dessert")
 #print(food.get_balance())
-clothing = Category("Clothing")
-food.transfer(50, clothing)
-clothing.withdraw(25.55)
-clothing.withdraw(100)
-auto = Category("Auto")
-auto.deposit(1000, "initial deposit")
-auto.withdraw(15)
+# clothing = Category("Clothing")
+# food.transfer(50, clothing)
+# clothing.withdraw(25.55)
+# clothing.withdraw(100)
+# auto = Category("Auto")
+# auto.deposit(1000, "initial deposit")
+# auto.withdraw(15)
 
 # print(food)
 # print(clothing)
 
-print(create_spend_chart([food, clothing, auto]))
+# print(create_spend_chart([food, clothing, auto]))
+
+food.deposit(900, "deposit")
+entertainment.deposit(900, "deposit")
+business.deposit(900, "deposit")
+food.withdraw(105.55)
+entertainment.withdraw(33.40)
+business.withdraw(10.99)
+print(create_spend_chart([business, food, entertainment]))
