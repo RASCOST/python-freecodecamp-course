@@ -128,39 +128,11 @@ def create_spend_chart(categories):
                 line += ' ' * 3
 
         if not re.search('[a-zA-Z]', line):
+            # remove the next line and the 4 spaces added on the first line
             chart = chart[:len(chart) - 5]
             break
         else:
             chart += line + ' \n'
             idx += 1
-    print(len(chart))
+
     return chart
-
-
-food = Category("Food")
-entertainment = Category("Entertainment")
-business = Category("Businness")
-# food.deposit(1000, "initial deposit")
-# food.withdraw(10.15, "groceries")
-# food.withdraw(15.89, "restaurant and more food for dessert")
-#print(food.get_balance())
-# clothing = Category("Clothing")
-# food.transfer(50, clothing)
-# clothing.withdraw(25.55)
-# clothing.withdraw(100)
-# auto = Category("Auto")
-# auto.deposit(1000, "initial deposit")
-# auto.withdraw(15)
-
-# print(food)
-# print(clothing)
-
-# print(create_spend_chart([food, clothing, auto]))
-
-food.deposit(900, "deposit")
-entertainment.deposit(900, "deposit")
-business.deposit(900, "deposit")
-food.withdraw(105.55)
-entertainment.withdraw(33.40)
-business.withdraw(10.99)
-print(create_spend_chart([business, food, entertainment]))
