@@ -17,3 +17,15 @@ class Rectangle:
 
     def get_diagonal(self):
         return (self.width ** 2 + self.height ** 2) ** 0.5
+
+    def get_picture(self):
+        picture = ''
+
+        if self.height > 50 or self.width > 50:
+            return 'Too big for picture.'
+
+        for height in range(self.height):
+            picture = '*' * self.width
+
+            if not height == self.height - 1:
+                picture += '\n'
