@@ -1,7 +1,7 @@
 class Rectangle:
-    def __init__(self, height, width):
-        setWidth(width)
-        setHeight(height)
+    def __init__(self, width, height):
+        self.set_width(width)
+        self.set_height(height)
 
     def set_width(self, width):
         self.width = width
@@ -25,7 +25,9 @@ class Rectangle:
             return 'Too big for picture.'
 
         for height in range(self.height):
-            picture = '*' * self.width
+            picture += '*' * self.width + '\n'
 
-            if not height == self.height - 1:
-                picture += '\n'
+        return picture
+
+    def __str__(self):
+        return f"Rectangle(width={self.width}, height={self.height})"
