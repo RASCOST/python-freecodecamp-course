@@ -29,5 +29,12 @@ class Rectangle:
 
         return picture
 
+    def get_amount_inside(self, shape):
+        pass
+
     def __str__(self):
         return f"Rectangle(width={self.width}, height={self.height})"
+
+class Square(Rectangle):
+    def __init__(self, width):
+        super(Square, self).__init__(width, width)
