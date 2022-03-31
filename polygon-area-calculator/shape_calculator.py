@@ -38,3 +38,7 @@ class Rectangle:
 class Square(Rectangle):
     def __init__(self, width):
         super(Square, self).__init__(width, width)
+
+    def set_side(self, side):
+        self.set_width(side)
+        self.set_height(side)
