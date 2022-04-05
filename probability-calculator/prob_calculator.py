@@ -26,32 +26,28 @@ def experiment(hat, expected_balls, num_balls_drawn, num_experiments):
     probability = 0
     N = num_experiments
     M = 0
-    num_balls = 0
 
-    hat.draw(num_balls_drawn)
-
-    # number of balls to draw
-    for key, value in expected_balls.items():
-        num_balls += value
-
-    # experiments
     for iter in range(num_experiments):
-        for draw in range(num_balls):
-            if hat.contents[random.randint(0, len(hat.contents) - 1)] in expected_balls.keys():
-                M += 1
+        temp_hat = copy.deepcopy(hat)
+        balls = temp_hat.draw(num_balls_drawn)
+        expected = expected_balls
+        expected = expected.fromkeys(expected, 0)
+        match = False
 
-        if M == num_balls:
-            probability = M / N
+        for index in range(len(balls)):
+            if balls[index] in expected:
+                expected[balls[index]] += 1
 
-        M = 0
+        for key, value in expected_balls.items():
+            if expected[key] >= value:
+                match = True
+            else:
+                match = False
+                break
+
+        if match:
+            M += 1
+
+    probability = M / N
 
     return probability
-
-
-hat = Hat(black=6, red=4, green=3)
-probability = experiment(hat=hat,
-                  expected_balls={"red":2,"green":1},
-                  num_balls_drawn=5,
-                  num_experiments=2000)
-
-print(probability)
